@@ -1,1 +1,1 @@
-# ddmin
+# ddminMus algorithm in C++
