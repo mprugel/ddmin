@@ -17,16 +17,18 @@ namespace ddmin
 
 
 template <class T>
-std::vector<T> without(std::vector<T> &input, int from, int to)
+std::vector<T> without(std::vector<bool> m, std::vector<T> &input, int from, int to)
 {
   std::vector<T> out;
   for(uint32_t i = 0; i < from; i++)
   {
-    out.push_back(input[i]);
+    if(m[i])
+      out.push_back(input[i]);
   }
   for(uint32_t i = to; i < input.size(); i++)
   {
-    out.push_back(input[i]);
+    if(m[i])
+      out.push_back(input[i]);
   }
   return out;
 }
@@ -53,7 +55,7 @@ std::vector<bool> ddminMus(std::vector<T> &s, func_ptr<T> check_func)
     // Loop through the subsets:
     for(uint32_t i = 0; i < n; i++)
     {
-      auto m_without_sub = ddmin::without(s, i * w, i * w + w);
+      auto m_without_sub = ddmin::without(m, s, i * w, i * w + w);
       n_checks++;
       // Skip if (M without Si) is empty
       if(!check_func(m_without_sub)) 
@@ -61,6 +63,9 @@ std::vector<bool> ddminMus(std::vector<T> &s, func_ptr<T> check_func)
         std::cout << "Remove: from " << (i*w) << " to " << (i*w+w) << std::endl;
         ddmin::remove(m, i * w, i * w + w);
       }
+      std::cout << "m.size: " << m.size() << std::endl;
+      std::cout << "n: " << n << std::endl;
+      std::cout << "n_checks: " << n_checks << std::endl;
     }
     if (w == 1){break;}
     w = (std::size_t)std::ceil(w / 2.0);
